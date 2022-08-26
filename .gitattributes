@@ -1,0 +1,6 @@
+_of_a_giant_file filter=lfs diff=lfs merge=lfs -text
+WindowsNoEditor/MobileTPS/Content/Paks/MobileTPS-WindowsNoEditor.pak filter=lfs diff=lfs merge=lfs -text
+/WindowsNoEditor/MobileTPS/Content/Paks/MobileTPS-WindowsNoEditor.pak filter=lfs diff=lfs merge=lfs -text
+/WindowsNoEditor/MobileTPS/Binaries/Win64/MobileTPS.exe filter=lfs diff=lfs merge=lfs -text
+/ filter=lfs diff=lfs merge=lfs -text
+WindowsNoEditor/MobileTPS/Binaries/Win64/MobileTPS.exe filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,23 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{87CDD4D5-463A-B7BD-07AA-EDB48766DD34}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "MobileTPS",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine",
+				"UMG"
+			]
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "Water",
+			"Enabled": true
+		}
+	]
+}
