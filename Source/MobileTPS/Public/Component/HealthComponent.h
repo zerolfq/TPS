@@ -20,6 +20,7 @@ public:
 	float GetHealth() const;
 
 	float GetDefaultHealth() const;
+
 	
 protected:
 	virtual void BeginPlay() override;
@@ -28,12 +29,14 @@ protected:
 	UFUNCTION()
 		void HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = HealthComponent)
+		static bool IsFriendly(AActor* ActorA,AActor* ActorB);
 protected:
 	// Called when the game starts
 
 	UPROPERTY(Replicated, BlueprintReadOnly,Category = HealthComponent)
 		float Health;
-	UPROPERTY(Replicated, EditAnywhere,BlueprintReadWrite, Category = HealthComponent)
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = HealthComponent)
 		float DefaultHealth;
 	bool bIsDead;
 public:
@@ -41,4 +44,6 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 		FOnHealthChangedSignature OnHealthChange;
+	UPROPERTY(EditDefaultsOnly,Category = HealthComponent)
+	uint8 TeamNum;
 }; 

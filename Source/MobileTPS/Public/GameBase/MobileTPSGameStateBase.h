@@ -32,6 +32,9 @@ protected:
 public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 public:
+	UFUNCTION(NetMulticast, Reliable)
+		void OnGameOver();
+public:
 	void SetWaveState(EWaveState NewState);
 	
 };

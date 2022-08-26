@@ -131,13 +131,17 @@ void AMobileTPSCharacter::OnHealthChanged(class UHealthComponent* OwningHealthCo
 		GetCharacterMovement()->StopMovementImmediately();
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		IsDied = true;
-		for (ASWeapon* Weapon : OwnWeapon) {
-			if (Weapon) Weapon->Destroy();
+		DestroyWeapon();
+		if (bIsAI) {
+			FTimerHandle FControlTime;
+			GetWorldTimerManager().SetTimer(FControlTime, this, &AMobileTPSCharacter::DetachFromControllerPendingDestroy, 2.0, false);
 		}
-		OwnWeapon.Empty();
-		FTimerHandle FControlTime;
-		GetWorldTimerManager().SetTimer(FControlTime, this, &AMobileTPSCharacter::DetachFromControllerPendingDestroy, 2.0, false);
-		SetLifeSpan(10.0);
+		else{
+			AController* APC = this->GetController();
+			AMobileTPSPlayerController* PC = Cast<AMobileTPSPlayerController>(APC);
+			DisableInput(PC);
+		}
+		SetLifeSpan(3.0);
 	}
 }
 
@@ -176,6 +180,15 @@ void AMobileTPSCharacter::SetCurWeapon(class ASWeapon* NowWeapon){
 	CurWeapon = NowWeapon;
 }
 
+
+void AMobileTPSCharacter::DestroyWeapon(){
+	EndFire();
+	for (ASWeapon* Weapon : OwnWeapon) {
+		if (Weapon) Weapon->Destroy();
+	}
+	OwnWeapon.Empty();
+	CurWeapon = nullptr;
+}
 
 void AMobileTPSCharacter::ServerNextWeapon_Implementation(){
 	NextWeapon();
@@ -258,8 +271,8 @@ void AMobileTPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	PlayerInputComponent->BindAxis("LookUp", this, &AMobileTPSCharacter::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("Turn", this, &AMobileTPSCharacter::AddControllerYawInput);
 
-	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AMobileTPSCharacter::BeginCrouch);
-	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AMobileTPSCharacter::EndCrouch);
+	//PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AMobileTPSCharacter::BeginCrouch);
+	//PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AMobileTPSCharacter::EndCrouch);
 
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AMobileTPSCharacter::BeginSprint);
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AMobileTPSCharacter::EndSprint);

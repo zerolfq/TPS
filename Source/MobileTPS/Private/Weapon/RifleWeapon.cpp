@@ -55,7 +55,7 @@ void ARifleWeapon::Fire(){
 			Surfacetype = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
 			if (Surfacetype == FleshVulnerable) CurrDamage *= 2;
 
-			UGameplayStatics::ApplyPointDamage(HitActor, CurrDamage, EyeRotation.Vector(), Hit, MyOwner->GetInstigatorController(), this, DamageType);
+			UGameplayStatics::ApplyPointDamage(HitActor, CurrDamage, EyeRotation.Vector(), Hit, MyOwner->GetInstigatorController(), GetOwner(), DamageType);
 			PlayImpactEffects(Surfacetype,Hit.ImpactPoint);
 			TraceEndPoint = Hit.ImpactPoint;
 		}
@@ -159,6 +159,7 @@ void ARifleWeapon::ServerStopFire_Implementation(){
 bool ARifleWeapon::ServerStopFire_Validate(){
 	return true;
 }
+
 
 void ARifleWeapon::ChangeHUD(){
 	AMobileTPSHUD* HUD = Cast<AMobileTPSHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());

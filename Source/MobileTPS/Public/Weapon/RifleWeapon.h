@@ -26,7 +26,6 @@ public:
 		void ServerStartFire();
 	UFUNCTION(Server, Reliable, WithValidation)
 		void ServerStopFire();
-
 public:
 	void ChangeHUD();
 protected:

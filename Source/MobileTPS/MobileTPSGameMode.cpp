@@ -27,7 +27,9 @@ AMobileTPSGameMode::AMobileTPSGameMode()
 	PrimaryActorTick.TickInterval = 1.0f;
 
 	TimeBetWeenwaves = 2.0;
+	MaxBotsToSpawn = 32.0f;
 	WaveCount = 0.0f;
+	bIsGameOver = false;
 }
 
 void AMobileTPSGameMode::StartPlay() {
@@ -38,6 +40,7 @@ void AMobileTPSGameMode::StartPlay() {
 
 void AMobileTPSGameMode::Tick(float DeltaSeconds) {
 	Super::Tick(DeltaSeconds);
+	if (bIsGameOver) return;
 	CheckWaveState();
 
 	CheckAnyPlayAlive();
@@ -98,7 +101,10 @@ void AMobileTPSGameMode::CheckWaveState(){
 
 
 void AMobileTPSGameMode::CheckAnyPlayAlive(){
-
+	if (!GetWorld()->GetPlayerControllerIterator()) {
+		UE_LOG(LogTemp, Warning, TEXT("No Player"));
+		return;
+	}
 	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; It++) {
 		APlayerController* PC = It->Get();
 		if (PC && PC->GetPawn()) {
@@ -116,6 +122,13 @@ void AMobileTPSGameMode::CheckAnyPlayAlive(){
 void AMobileTPSGameMode::GameOver(){
 	EndWave();
 	SetWaveState(EWaveState::GameOver);
+	bIsGameOver = true;
+
+	AMobileTPSGameStateBase* GS = GetGameState<AMobileTPSGameStateBase>(); // »ñÈ¡ÓÎÏ·×´Ì¬
+	DistoryWave();
+	if (ensure(GS)) {
+		GS->OnGameOver();
+	}
 
 	UE_LOG(LogTemp,Warning,TEXT("Game Over"));
 
@@ -125,6 +138,18 @@ void AMobileTPSGameMode::SetWaveState(EWaveState NewState) {
 	AMobileTPSGameStateBase* GS = GetGameState<AMobileTPSGameStateBase>();
 	if (ensure(GS)) {
 		GS->SetWaveState(NewState);
+	}
+}
+
+void AMobileTPSGameMode::DistoryWave(){
+	for (TActorIterator<APawn> It(GetWorld()); It; ++It) {
+		APawn* TestPawn = *It;
+		if (TestPawn == nullptr || TestPawn->IsPlayerControlled()){
+			TestPawn->DetachFromControllerPendingDestroy();
+			AMobileTPSCharacter * TPSPawn = Cast<AMobileTPSCharacter>(TestPawn);
+			if (TPSPawn) TPSPawn->DestroyWeapon();
+
+		}
 	}
 }
 

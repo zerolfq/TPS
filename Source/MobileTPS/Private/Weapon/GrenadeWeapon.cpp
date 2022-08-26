@@ -48,7 +48,7 @@ void AGrenadeWeapon::PlayFireEffects(FVector TraceEndPoint){
 
 void AGrenadeWeapon::ServerFire_Implementation(FVector ActorLoction, FVector_NetQuantizeNormal ACtorRotation){
 	FActorSpawnParameters ActorSpawnParams;
-	ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 	ActorSpawnParams.Instigator = Cast<AMobileTPSCharacter>(GetOwner());
 	ABullet* Bullet = GetWorld()->SpawnActor<ABullet>(ASBulletClass, ActorLoction, ACtorRotation.Rotation(), ActorSpawnParams);
 	if (Bullet) {

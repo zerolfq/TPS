@@ -12,6 +12,7 @@ UHealthComponent::UHealthComponent()
 	// off to improve performance if you don't need them.
 	DefaultHealth = 100.0f;
 	bIsDead = false;
+	TeamNum = 255;
 	SetIsReplicatedByDefault(true);
 	// ...
 }
@@ -48,8 +49,9 @@ void UHealthComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 
 void UHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser){
 	if (Damage <= 0.0f || bIsDead) return;
+	if (DamagedActor != InstigatedBy->GetPawn() && IsFriendly(DamagedActor, InstigatedBy->GetPawn())) return;
 	Health = FMath::Clamp(Health - Damage, 0.0f, DefaultHealth);
-	UE_LOG(LogTemp, Warning, TEXT("Health Changed:%f"), Health);
+	UE_LOG(LogTemp, Warning, TEXT("Health Changed:%f %d"), Health,TeamNum);
 
 	OnHealthChange.Broadcast(this, Health, Damage, DamageType, InstigatedBy, DamageCauser);
 	bIsDead = Health <= 0.0f;
@@ -59,5 +61,15 @@ void UHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, c
 			GM->OnActorKilled.Broadcast(GetOwner(),DamageCauser, InstigatedBy);
 		}
 	}
+}
+
+bool UHealthComponent::IsFriendly(AActor* ActorA, AActor* ActorB){
+	if (ActorB == nullptr || ActorA == nullptr) return false;
+	UHealthComponent* HealthCompA = Cast<UHealthComponent>(ActorA->GetComponentByClass(UHealthComponent::StaticClass()));
+	UHealthComponent* HealthCompB = Cast<UHealthComponent>(ActorB->GetComponentByClass(UHealthComponent::StaticClass()));
+	if (HealthCompA == nullptr || HealthCompB == nullptr) return true;
+	if (HealthCompA->TeamNum == HealthCompB->TeamNum) return true;
+	else return false;	
+	
 }
 

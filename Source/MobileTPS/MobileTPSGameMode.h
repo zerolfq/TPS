@@ -27,6 +27,10 @@ protected:
 	int WaveCount;
 	UPROPERTY(EditDefaultsOnly,Category = GameMode)
 	float TimeBetWeenwaves;
+	UPROPERTY(EditDefaultsOnly, Category = GameMode)
+	float MaxBotsToSpawn;
+
+	bool bIsGameOver;
 protected:
 	UFUNCTION(BlueprintImplementableEvent,Category = GameMode)
 	void SpawnNewBot();
@@ -47,6 +51,8 @@ protected:
 	void GameOver();
 
 	void SetWaveState(EWaveState NewState);
+
+	void DistoryWave();
 public:
 	virtual void StartPlay() override;
 	virtual void Tick( float DeltaSeconds ) override;

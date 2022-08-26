@@ -55,6 +55,8 @@ public:
 	void SetCurWeapon(class ASWeapon* NowWeapon);
 
 	class UCameraComponent* GetCamera() {return CameraComp;}
+
+	void DestroyWeapon();
 public:
 	//UFUNCTION(Server,Reliable,WithValidation)
 	//	void ServerStartFire();

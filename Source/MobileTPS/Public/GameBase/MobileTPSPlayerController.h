@@ -25,4 +25,6 @@ public:
 		void ChangeHUDScore(float Score);
 	UFUNCTION(BlueprintCallable)
 		void ChangeHUDHP(float HpPercent);
+	UFUNCTION(BlueprintImplementableEvent)
+		void SetGameOverWidget(float Score_A, float Score_B, float Kill_A, float Kill_B);
 };
