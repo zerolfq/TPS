@@ -19,27 +19,18 @@ void AMobileTPSGameStateBase::GetLifetimeReplicatedProps(TArray<FLifetimePropert
 	DOREPLIFETIME(AMobileTPSGameStateBase,WaveState);
 }
 
-void AMobileTPSGameStateBase::OnGameOver_Implementation(){
-	TArray<int> Score;
+void AMobileTPSGameStateBase::OnGameOver_Implementation(float Score_A, float Score_B){
 	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; It++) {
 		AMobileTPSPlayerController* PC = Cast<AMobileTPSPlayerController>(It->Get());
 		if (PC && PC->IsLocalController()) {
-			Score.Add(PC->GetPlayerState<AMobileTPSPlayerState>()->GetScore());
-		}
-	}
-	float Score_A = 0.0,Score_B = 0.0;
-	if (Score.Num()> 0) Score_A = Score[0];
-	if (Score.Num() > 1) Score_B = Score[1];
-	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; It++) {
-		AMobileTPSPlayerController* PC = Cast<AMobileTPSPlayerController>(It->Get());
-		if (PC && PC->IsLocalController()) {
-			PC->SetGameOverWidget(Score_A, Score_B,Score_A / 20.0,Score_B / 20.0);
+			PC->SetGameOverWidget(Score_A, Score_B, Score_A / 20.0, Score_B / 20.0);
 			PC->bShowMouseCursor = true;
 			APawn* MyPawn = PC->GetPawn();
 			if (MyPawn) MyPawn->DisableInput(PC);
 		}
 	}
 }
+
 
 void AMobileTPSGameStateBase::SetWaveState(EWaveState NewState){
 	// C++与蓝图的差异 RepNotify只在C++上适用

@@ -127,7 +127,17 @@ void AMobileTPSGameMode::GameOver(){
 	AMobileTPSGameStateBase* GS = GetGameState<AMobileTPSGameStateBase>(); // »ñÈ¡ÓÎÏ·×´Ì¬
 	DistoryWave();
 	if (ensure(GS)) {
-		GS->OnGameOver();
+		TArray<int> Score;
+		for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; It++) {
+			AMobileTPSPlayerController* PC = Cast<AMobileTPSPlayerController>(It->Get());
+			if (PC) {
+				Score.Add(PC->GetPlayerState<AMobileTPSPlayerState>()->GetScore());
+			}
+		}
+		float Score_A = 0.0, Score_B = 0.0;
+		if (Score.Num() > 0) Score_A = Score[0];
+		if (Score.Num() > 1) Score_B = Score[1];
+		GS->OnGameOver(Score_A, Score_B);
 	}
 
 	UE_LOG(LogTemp,Warning,TEXT("Game Over"));

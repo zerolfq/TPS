@@ -33,7 +33,7 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 public:
 	UFUNCTION(NetMulticast, Reliable)
-		void OnGameOver();
+		void OnGameOver(float Score_A, float Score_B);
 public:
 	void SetWaveState(EWaveState NewState);
 	
